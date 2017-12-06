@@ -62,6 +62,41 @@ OPTIONS:
 
 When running release-manager, it will create a Status.toml file in your project's directory. If you wish to put this somewhere else, you can pass the `-s` option to release-manager. The status file is used to keep track of which builds have succeeded for which versions of the crate, and whether a crate has been published for this version.
 
+Output directory structure
+```
+releases/release-manager/0.1.1 
+[I] ➜  tree
+.
+├── aarch64-unknown-linux-gnu
+│   ├── LICENSE
+│   ├── README.md
+│   └── release-manager
+├── aarch64-unknown-linux-gnu.zip
+├── arm-unknown-linux-gnueabihf
+│   ├── LICENSE
+│   ├── README.md
+│   └── release-manager
+├── arm-unknown-linux-gnueabihf.zip
+├── armv7-unknown-linux-gnueabihf
+│   ├── LICENSE
+│   ├── README.md
+│   └── release-manager
+├── armv7-unknown-linux-gnueabihf.zip
+├── x86_64-pc-windows-gnu
+│   ├── LICENSE
+│   ├── README.md
+│   └── release-manager.exe
+├── x86_64-pc-windows-gnu.zip
+├── x86_64-unknown-linux-gnu
+│   ├── LICENSE
+│   ├── README.md
+│   └── release-manager
+└── x86_64-unknown-linux-gnu.zip
+
+5 directories, 20 files
+
+```
+
 ### License
 
 Release Manager is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
