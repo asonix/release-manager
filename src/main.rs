@@ -182,5 +182,6 @@ fn main() {
                 status.publish(version);
             })
             .unwrap();
+        status.write().unwrap();
     }
 }

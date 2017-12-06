@@ -123,7 +123,7 @@ dependencies = [
 
 [[package]]
 name = "release-manager"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "serde 1.0.23 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde_derive 1.0.23 (registry+https://github.com/rust-lang/crates.io-index)",
