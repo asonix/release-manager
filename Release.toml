@@ -1,0 +1,23 @@
+release_path = "/home/asonix/Development/rust/releases/"
+license = "LICENSE"
+readme = "README.md"
+
+[config.Windows.amd64]
+libs = ["/usr/x86_64-w64-mingw32"]
+env = {}
+
+[config.Linux.aarch64]
+libs = ["/usr/aarch64-linux-gnu", "/home/asonix/Development/aarch64"]
+env = {}
+
+[config.Linux.armv7h]
+libs = ["/usr/arm-linux-gnueabihf", "/home/asonix/Development/armeabi"]
+env = {}
+
+[config.Linux.armh]
+libs = ["/usr/arm-linux-gnueabihf", "/home/asonix/Development/armeabi"]
+env = {}
+
+[config.Linux.amd64]
+libs = []
+env = {}
