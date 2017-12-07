@@ -11,8 +11,8 @@ Release Manager currently handles the following targets:
  - `x86_64-unknown-linux-musl` configured as `[config.Linux.amd64musl]`
  - `arm-unknown-linux-gnueabihf` configured as `[config.Linux.armh]`
  - `arm-unknown-linux-musleabihf` configured as `[config.Linux.armhmusl]`
- - `armv7-unknown-linux-gnueabihf` configured as `[config.Linux.armv7h`
- - `armv7-unknown-linux-musleabihf` configured as `[config.Linux.armv7hmusl`
+ - `armv7-unknown-linux-gnueabihf` configured as `[config.Linux.armv7h]`
+ - `armv7-unknown-linux-musleabihf` configured as `[config.Linux.armv7hmusl]`
  - `aarch64-unknown-linux-gnu` configured as `[config.Linux.aarch64]`
 
 Once you have your cross compile targets set up, create a `Release.toml`. By default, release-manager expects the release toml to be in your crate's directory. If you wish to keep this file somewhere else, you can pass the `-r` option to release-manager with a path to the config.
