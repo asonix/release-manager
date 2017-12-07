@@ -23,8 +23,11 @@ use super::StatusWrapper;
 pub enum Arch {
     Aarch64,
     Armv7h,
+    Armv7hMusl,
     Armh,
+    ArmhMusl,
     Amd64,
+    Amd64Musl,
     I686,
 }
 
@@ -47,8 +50,11 @@ impl Target {
         match (&os, &arch) {
             (&OS::Linux, &Arch::Aarch64) |
             (&OS::Linux, &Arch::Armv7h) |
+            (&OS::Linux, &Arch::Armv7hMusl) |
             (&OS::Linux, &Arch::Armh) |
+            (&OS::Linux, &Arch::ArmhMusl) |
             (&OS::Linux, &Arch::Amd64) |
+            (&OS::Linux, &Arch::Amd64Musl) |
             (&OS::Windows, &Arch::Amd64) |
             (&OS::Windows, &Arch::I686) |
             (&OS::Mac, &Arch::Amd64) => {
@@ -67,8 +73,11 @@ impl Target {
         match (&self.os, &self.arch) {
             (&OS::Linux, &Arch::Aarch64) => "aarch64-unknown-linux-gnu",
             (&OS::Linux, &Arch::Armv7h) => "armv7-unknown-linux-gnueabihf",
+            (&OS::Linux, &Arch::Armv7hMusl) => "armv7-unknown-linux-musleabihf",
             (&OS::Linux, &Arch::Armh) => "arm-unknown-linux-gnueabihf",
+            (&OS::Linux, &Arch::ArmhMusl) => "arm-unknown-linux-musleabihf",
             (&OS::Linux, &Arch::Amd64) => "x86_64-unknown-linux-gnu",
+            (&OS::Linux, &Arch::Amd64Musl) => "x86_64-unknown-linux-musl",
             (&OS::Windows, &Arch::Amd64) => "x86_64-pc-windows-gnu",
             (&OS::Windows, &Arch::I686) => "i686-pc-windows-gnu",
             (&OS::Mac, &Arch::Amd64) => "x86_64-apple-darwin",

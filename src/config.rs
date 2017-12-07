@@ -71,11 +71,20 @@ fn build_os(targets: &mut Vec<Target>, os: OS, value: &HashMap<String, TargetCon
             "armv7h" => {
                 add_target(targets, os.clone(), Arch::Armv7h, tc);
             }
+            "armv7hmusl" => {
+                add_target(targets, os.clone(), Arch::Armv7hMusl, tc);
+            }
             "armh" => {
                 add_target(targets, os.clone(), Arch::Armh, tc);
             }
+            "armhmusl" => {
+                add_target(targets, os.clone(), Arch::ArmhMusl, tc);
+            }
             "amd64" => {
                 add_target(targets, os.clone(), Arch::Amd64, tc);
+            }
+            "amd64musl" => {
+                add_target(targets, os.clone(), Arch::Amd64Musl, tc);
             }
             "i686" => {
                 add_target(targets, os.clone(), Arch::I686, tc);

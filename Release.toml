@@ -14,10 +14,22 @@ env = {}
 libs = ["/usr/arm-linux-gnueabihf", "/home/asonix/Development/armeabi"]
 env = {}
 
+[config.Linux.armv7hmusl]
+libs = ["/usr/arm-linux-gnueabihf"]
+env = {}
+
 [config.Linux.armh]
 libs = ["/usr/arm-linux-gnueabihf", "/home/asonix/Development/armeabi"]
 env = {}
 
+[config.Linux.armhmusl]
+libs = ["/usr/arm-linux-gnueabihf"]
+env = {}
+
 [config.Linux.amd64]
+libs = []
+env = {}
+
+[config.Linux.amd64musl]
 libs = []
 env = {}
