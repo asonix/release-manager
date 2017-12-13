@@ -90,6 +90,7 @@ FLAGS:
     -h, --help       Prints help information
     -p, --publish    Publish to crates.io on succesfull build
     -V, --version    Prints version information
+        --verbose    Print debug info
 
 OPTIONS:
     -r, --release-config <release_config>    Provide an alternative path for the release config
