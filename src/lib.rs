@@ -26,6 +26,9 @@ extern crate serde_derive;
 #[macro_use]
 extern crate structopt_derive;
 
+#[macro_use]
+extern crate log;
+
 mod error;
 mod target;
 mod config;

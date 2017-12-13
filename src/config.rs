@@ -40,7 +40,9 @@ impl Config {
                 "Mac" => {
                     build_os(&mut targets, OS::Mac, value);
                 }
-                _ => {}
+                _ => {
+                    debug!("{} not a valid Operating System", os);
+                }
             }
         }
 
@@ -89,7 +91,9 @@ fn build_os(targets: &mut Vec<Target>, os: OS, value: &HashMap<String, TargetCon
             "i686" => {
                 add_target(targets, os.clone(), Arch::I686, tc);
             }
-            _ => {}
+            _ => {
+                debug!("{} not a valid architecture", arch);
+            }
         }
     }
 }

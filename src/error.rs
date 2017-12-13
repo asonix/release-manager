@@ -18,6 +18,7 @@ use toml::ser::Error as TomlWriteError;
 use zip::result::ZipError;
 use std::io::Error as IOError;
 use std::path::StripPrefixError;
+use std::fmt;
 
 #[derive(Debug)]
 pub enum Error {
@@ -30,7 +31,9 @@ pub enum Error {
     /// Error while zipping file
     Zip(ZipError),
     /// Zip placement path doesn't exist
-    ZipPathError,
+    ZipPath,
+    /// Path could not be converted to string
+    PathString,
     /// Target specified is not supported
     InvalidTarget,
     /// Target crate has no [package] section
@@ -43,6 +46,31 @@ pub enum Error {
     NotString,
     /// Expected a table (when parsing toml)
     NotTable,
+    /// Cannot publish already published crate
+    RePublish,
+    /// Some builds failed
+    FailedBuilds,
+}
+
+impl fmt::Display for Error {
+    fn fmt(&self, f: &mut fmt::Formatter) -> Result<(), fmt::Error> {
+        match *self {
+            Error::IO(ref err) => write!(f, "IO Error: {}", err),
+            Error::TomlRead(ref err) => write!(f, "Error reading TOML: {}", err),
+            Error::TomlWrite(ref err) => write!(f, "Error writing TOML: {}", err),
+            Error::Zip(ref err) => write!(f, "Error making .zip: {}", err),
+            Error::ZipPath => write!(f, "Path for zip file is invalid"),
+            Error::PathString => write!(f, "Path could not be converted to string"),
+            Error::InvalidTarget => write!(f, "Supplied target is not supported"),
+            Error::PackageMissing => write!(f, "Crate is missing [package] section"),
+            Error::NameMissing => write!(f, "Crate is missing the 'name' parameter"),
+            Error::VersionMissing => write!(f, "Crate is missing the 'version' parameter"),
+            Error::NotString => write!(f, "Expected a toml::Value::String, got something else"),
+            Error::NotTable => write!(f, "Expected a toml::Value::Table, got somethign else"),
+            Error::RePublish => write!(f, "Cannot re-publish an already published crate"),
+            Error::FailedBuilds => write!(f, "Some builds failed"),
+        }
+    }
 }
 
 impl From<IOError> for Error {
@@ -71,6 +99,6 @@ impl From<ZipError> for Error {
 
 impl From<StripPrefixError> for Error {
     fn from(_: StripPrefixError) -> Self {
-        Error::ZipPathError
+        Error::ZipPath
     }
 }

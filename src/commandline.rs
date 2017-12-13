@@ -21,6 +21,8 @@ pub struct Opt {
     force_compile: bool,
     #[structopt(short = "p", long = "publish", help = "Publish to crates.io on succesfull build")]
     publish: bool,
+    #[structopt(long = "verbose", help = "Print debug info")]
+    verbose: bool,
     #[structopt(short = "r", long = "release-config",
                 help = "Provide an alternative path for the release config")]
     release_config: Option<String>,
@@ -36,6 +38,10 @@ impl Opt {
 
     pub fn publish(&self) -> bool {
         self.publish
+    }
+
+    pub fn verbose(&self) -> bool {
+        self.verbose
     }
 
     pub fn release_config(&self) -> Option<&str> {

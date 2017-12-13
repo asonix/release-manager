@@ -81,7 +81,10 @@ impl Target {
             (&OS::Windows, &Arch::Amd64) => "x86_64-pc-windows-gnu",
             (&OS::Windows, &Arch::I686) => "i686-pc-windows-gnu",
             (&OS::Mac, &Arch::Amd64) => "x86_64-apple-darwin",
-            _ => "unknown",
+            _ => {
+                debug!("Unkown OS/Arch combination: {:?}, {:?}", self.os, self.arch);
+                "unknown"
+            }
         }
     }
 
@@ -105,6 +108,8 @@ impl Target {
 
     // Make env a table so it has key-value pairs
     pub fn compile(&self, version: &str, status: &mut StatusWrapper) -> Result<ExitStatus, Error> {
+        debug!("Starting compile for {}", self.target_str());
+
         Command::new("cargo")
             .args(&["build", "--target", self.target_str(), "--release"])
             .env(

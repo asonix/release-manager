@@ -62,6 +62,22 @@ impl<'a> StatusWrapper<'a> {
         );
     }
 
+    pub fn clear_missing_targets(&mut self, version: &str, target_strings: &[&str]) {
+        let mut version_info = self.status.get_mut(version);
+        if let Some(ref mut version_info) = version_info {
+            version_info.arches.retain(|k, _| {
+                let contains = target_strings.contains(&k.as_ref());
+                if !contains {
+                    debug!(
+                        "{} not in supplied release config, removing from status file",
+                        k
+                    )
+                }
+                contains
+            });
+        }
+    }
+
     pub fn needs_compile(&self, arch: &str, version: &str) -> bool {
         let arches = self.status.get(version);
         let vs = if let Some(vs) = arches {
@@ -102,8 +118,10 @@ impl<'a> StatusWrapper<'a> {
         self.set_status(arch, version, BuildStatus::Failed);
     }
 
-    pub fn all_clear(&self) -> bool {
-        for version_status in self.status.values() {
+    pub fn all_clear(&self, version: &str) -> bool {
+        let version_status = self.status.get(version);
+
+        if let Some(ref version_status) = version_status {
             for build_status in version_status.arches.values() {
                 if build_status != &BuildStatus::Success {
                     return false;
