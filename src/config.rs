@@ -13,6 +13,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Release Manager  If not, see <http://www.gnu.org/licenses/>.
 
+use std::convert::TryFrom;
 use std::collections::HashMap;
 
 use super::{Arch, OS, Target};
@@ -30,20 +31,8 @@ impl Config {
         let mut targets = Vec::new();
 
         for (os, value) in self.config.iter() {
-            match os.as_ref() {
-                "Linux" => {
-                    build_os(&mut targets, OS::Linux, value);
-                }
-                "Windows" => {
-                    build_os(&mut targets, OS::Windows, value);
-                }
-                "Mac" => {
-                    build_os(&mut targets, OS::Mac, value);
-                }
-                _ => {
-                    debug!("{} not a valid Operating System", os);
-                }
-            }
+            let opsys = OS::try_from(os.as_ref());
+            build_os(&mut targets, opsys.expect(&format!("{}, is not a valid Operating System!",os)), value);
         }
 
         targets
@@ -66,34 +55,7 @@ fn add_target(targets: &mut Vec<Target>, os: OS, arch: Arch, tc: &TargetConfig) 
 
 fn build_os(targets: &mut Vec<Target>, os: OS, value: &HashMap<String, TargetConfig>) {
     for (arch, tc) in value.iter() {
-        match arch.as_ref() {
-            "aarch64" => {
-                add_target(targets, os.clone(), Arch::Aarch64, tc);
-            }
-            "armv7h" => {
-                add_target(targets, os.clone(), Arch::Armv7h, tc);
-            }
-            "armv7hmusl" => {
-                add_target(targets, os.clone(), Arch::Armv7hMusl, tc);
-            }
-            "armh" => {
-                add_target(targets, os.clone(), Arch::Armh, tc);
-            }
-            "armhmusl" => {
-                add_target(targets, os.clone(), Arch::ArmhMusl, tc);
-            }
-            "amd64" => {
-                add_target(targets, os.clone(), Arch::Amd64, tc);
-            }
-            "amd64musl" => {
-                add_target(targets, os.clone(), Arch::Amd64Musl, tc);
-            }
-            "i686" => {
-                add_target(targets, os.clone(), Arch::I686, tc);
-            }
-            _ => {
-                debug!("{} not a valid architecture", arch);
-            }
-        }
+        let arc = Arch::try_from(arch.as_ref());
+        add_target(targets, os.clone(), arc.expect(&format!("{} is not a valid architecture!", arch)), tc);
     }
 }

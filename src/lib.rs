@@ -14,6 +14,7 @@
 // along with Release Manager  If not, see <http://www.gnu.org/licenses/>.
 
 #![feature(entry_and_modify)]
+#![feature(try_from)]
 
 extern crate toml;
 extern crate serde;

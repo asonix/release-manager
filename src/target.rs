@@ -15,7 +15,7 @@
 
 use std::process::{Command, ExitStatus};
 use std::collections::HashMap;
-
+use std::convert::TryFrom;
 use super::Error;
 use super::StatusWrapper;
 
@@ -29,6 +29,42 @@ pub enum Arch {
     Amd64,
     Amd64Musl,
     I686,
+}
+
+impl<'a> TryFrom<&'a str> for Arch {
+    type Error = &'a str;
+    fn try_from(value : &'a str) -> Result<Arch, &'a str>{
+        match value {
+            "aarch64" => {
+                Ok(Arch::Aarch64)
+            }
+            "armv7h" => {
+                Ok(Arch::Armv7h)
+            }
+            "armv7hmusl" => {
+                Ok(Arch::Armv7hMusl)
+            }
+            "armh" => {
+                Ok(Arch::Armh)
+            }
+            "armhmmusl" => {
+                Ok(Arch::ArmhMusl)
+            }
+            "amd64" => {
+                Ok(Arch::Amd64)
+            }
+            "amd64musl" => {
+                Ok(Arch::Amd64Musl)
+            }
+            "i686" => {
+                Ok(Arch::I686)
+            }
+
+            _ => {
+                Err(value)
+            }
+        }
+    }
 }
 
 #[derive(Clone, Debug)]
@@ -135,5 +171,26 @@ impl Target {
 
                 Ok(exit_status)
             })
+    }
+}
+
+
+impl<'a> TryFrom<&'a str> for OS {
+    type Error = &'a str;
+    fn try_from(value : &'a str) -> Result<OS, &'a str>{
+        match value {
+            "Linux" => {
+                Ok(OS::Linux)
+            }
+            "Windows" => {
+                Ok(OS::Windows)
+            }
+            "Mac" => {
+                Ok(OS::Mac)
+            }
+            _ => {
+                Err(value)
+            }
+        }
     }
 }
