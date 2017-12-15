@@ -32,7 +32,11 @@ impl Config {
 
         for (os, value) in self.config.iter() {
             let opsys = OS::try_from(os.as_ref());
-            build_os(&mut targets, opsys.expect(&format!("{}, is not a valid Operating System!",os)), value);
+            if opsys.is_err(){
+                debug!("{}, is not a valid Operating System!",os);
+            } else {
+                build_os(&mut targets, opsys.unwrap(), value);
+            }
         }
 
         targets
@@ -56,6 +60,11 @@ fn add_target(targets: &mut Vec<Target>, os: OS, arch: Arch, tc: &TargetConfig) 
 fn build_os(targets: &mut Vec<Target>, os: OS, value: &HashMap<String, TargetConfig>) {
     for (arch, tc) in value.iter() {
         let arc = Arch::try_from(arch.as_ref());
-        add_target(targets, os.clone(), arc.expect(&format!("{} is not a valid architecture!", arch)), tc);
+
+        if arc.is_err(){
+            debug!("{} is not a valid architecture!", arch);
+        } else {
+            add_target(targets, os.clone(), arc.unwrap(), tc);
+        }
     }
 }
