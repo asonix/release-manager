@@ -44,7 +44,7 @@ use toml::Value;
 
 pub use target::{Arch, OS, Target};
 pub use error::Error;
-pub use config::{Config, TargetConfig};
+pub use config::{Config, ConfigState, ConfigTrait, TargetConfig};
 pub use status::{StatusWrapper, Status, VersionStatus, BuildStatus};
 pub use commandline::Opt;
 

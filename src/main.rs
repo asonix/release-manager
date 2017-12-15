@@ -38,7 +38,7 @@ use structopt::StructOpt;
 use log::{LogLevelFilter, LogRecord};
 use env_logger::LogBuilder;
 
-use release_manager::{Config, Error, Opt, StatusWrapper};
+use release_manager::{Config, ConfigState, ConfigTrait, Error, Opt, StatusWrapper};
 use release_manager::{parse_toml, publish, table_str};
 
 fn zip_directory(result_path: &str, zip_contents_path: &str, zip_name: &str) -> Result<(), Error> {
@@ -105,7 +105,11 @@ fn do_main() -> Result<(), Error> {
 
     let cargo_path = Path::new("Cargo.toml");
 
-    let config: Config = parse_toml(&release_path)?;
+    let (config, state) = Config::new(&release_path)?;
+    if state == ConfigState::Upgraded {
+        config.save(&release_path)?;
+    }
+
     let cargo: Value = parse_toml(&cargo_path)?;
 
     let sf = opt.status_file();
@@ -162,14 +166,14 @@ fn do_main() -> Result<(), Error> {
                 &name
             );
 
-            let license_path = format!("{}/{}", dir_str, &config.license);
-            let readme_path = format!("{}/{}", dir_str, &config.readme);
-
             let dest_dir = format!("{}/{}", &full_release_path_string, target.target_str());
 
             fs::create_dir_all(&dest_dir)?;
-            fs::copy(license_path, format!("{}/{}", dest_dir, &config.license))?;
-            fs::copy(readme_path, format!("{}/{}", dest_dir, &config.readme))?;
+
+            for file in config.included_files() {
+                let file_path = format!("{}/{}", dir_str, &file);
+                fs::copy(file_path, format!("{}/{}", dest_dir, &file))?;
+            }
 
             if fs::metadata(&build_path).is_ok() {
                 let dest_path = format!("{}/{}", dest_dir, &name);

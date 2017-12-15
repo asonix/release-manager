@@ -33,36 +33,18 @@ pub enum Arch {
 
 impl<'a> TryFrom<&'a str> for Arch {
     type Error = &'a str;
-    fn try_from(value : &'a str) -> Result<Arch, &'a str>{
+    fn try_from(value: &'a str) -> Result<Arch, &'a str> {
         match value {
-            "aarch64" => {
-                Ok(Arch::Aarch64)
-            }
-            "armv7h" => {
-                Ok(Arch::Armv7h)
-            }
-            "armv7hmusl" => {
-                Ok(Arch::Armv7hMusl)
-            }
-            "armh" => {
-                Ok(Arch::Armh)
-            }
-            "armhmmusl" => {
-                Ok(Arch::ArmhMusl)
-            }
-            "amd64" => {
-                Ok(Arch::Amd64)
-            }
-            "amd64musl" => {
-                Ok(Arch::Amd64Musl)
-            }
-            "i686" => {
-                Ok(Arch::I686)
-            }
+            "aarch64" => Ok(Arch::Aarch64),
+            "armv7h" => Ok(Arch::Armv7h),
+            "armv7hmusl" => Ok(Arch::Armv7hMusl),
+            "armh" => Ok(Arch::Armh),
+            "armhmusl" => Ok(Arch::ArmhMusl),
+            "amd64" => Ok(Arch::Amd64),
+            "amd64musl" => Ok(Arch::Amd64Musl),
+            "i686" => Ok(Arch::I686),
 
-            _ => {
-                Err(value)
-            }
+            _ => Err(value),
         }
     }
 }
@@ -177,20 +159,13 @@ impl Target {
 
 impl<'a> TryFrom<&'a str> for OS {
     type Error = &'a str;
-    fn try_from(value : &'a str) -> Result<OS, &'a str>{
+
+    fn try_from(value: &'a str) -> Result<OS, &'a str> {
         match value {
-            "Linux" => {
-                Ok(OS::Linux)
-            }
-            "Windows" => {
-                Ok(OS::Windows)
-            }
-            "Mac" => {
-                Ok(OS::Mac)
-            }
-            _ => {
-                Err(value)
-            }
+            "Linux" => Ok(OS::Linux),
+            "Windows" => Ok(OS::Windows),
+            "Mac" => Ok(OS::Mac),
+            _ => Err(value),
         }
     }
 }

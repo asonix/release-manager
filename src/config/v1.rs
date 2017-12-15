@@ -13,27 +13,35 @@
 // You should have received a copy of the GNU General Public License
 // along with Release Manager  If not, see <http://www.gnu.org/licenses/>.
 
-use std::convert::TryFrom;
 use std::collections::HashMap;
+use std::convert::TryFrom;
 
-use super::{Arch, OS, Target};
+use super::{ConfigTrait, TargetConfig, Target, OS};
+use super::build_os;
 
 #[derive(Serialize, Deserialize)]
 pub struct Config {
     pub release_path: String,
-    pub license: String,
-    pub readme: String,
+    pub included_files: Vec<String>,
     pub config: HashMap<String, HashMap<String, TargetConfig>>,
 }
 
 impl Config {
-    pub fn targets(&self) -> Vec<Target> {
+    pub fn included_files(&self) -> &[String] {
+        self.included_files.as_ref()
+    }
+}
+
+impl ConfigTrait for Config {
+    type Previous = super::v0::Config;
+
+    fn targets(&self) -> Vec<Target> {
         let mut targets = Vec::new();
 
         for (os, value) in self.config.iter() {
             let opsys = OS::try_from(os.as_ref());
-            if opsys.is_err(){
-                debug!("{}, is not a valid Operating System!",os);
+            if opsys.is_err() {
+                debug!("{}, is not a valid Operating System!", os);
             } else {
                 build_os(&mut targets, opsys.unwrap(), value);
             }
@@ -43,28 +51,16 @@ impl Config {
     }
 }
 
-#[derive(Serialize, Deserialize)]
-pub struct TargetConfig {
-    libs: Vec<String>,
-    env: HashMap<String, String>,
-}
+impl From<super::v0::Config> for Config {
+    fn from(c: super::v0::Config) -> Self {
+        let mut v = Vec::new();
+        v.push(c.readme);
+        v.push(c.license);
 
-fn add_target(targets: &mut Vec<Target>, os: OS, arch: Arch, tc: &TargetConfig) {
-    if let Ok(mut target) = Target::new(os.clone(), arch) {
-        target.add_libs(&tc.libs);
-        target.add_env(&tc.env);
-        targets.push(target);
-    }
-}
-
-fn build_os(targets: &mut Vec<Target>, os: OS, value: &HashMap<String, TargetConfig>) {
-    for (arch, tc) in value.iter() {
-        let arc = Arch::try_from(arch.as_ref());
-
-        if arc.is_err(){
-            debug!("{} is not a valid architecture!", arch);
-        } else {
-            add_target(targets, os.clone(), arc.unwrap(), tc);
+        Config {
+            release_path: c.release_path,
+            included_files: v,
+            config: c.config,
         }
     }
 }
