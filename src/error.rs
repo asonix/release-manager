@@ -50,6 +50,8 @@ pub enum Error {
     RePublish,
     /// Some builds failed
     FailedBuilds,
+    /// Failed to parse Config
+    Config,
 }
 
 impl fmt::Display for Error {
@@ -69,6 +71,7 @@ impl fmt::Display for Error {
             Error::NotTable => write!(f, "Expected a toml::Value::Table, got somethign else"),
             Error::RePublish => write!(f, "Cannot re-publish an already published crate"),
             Error::FailedBuilds => write!(f, "Some builds failed"),
+            Error::Config => write!(f, "Error building config"),
         }
     }
 }

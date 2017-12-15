@@ -1,35 +1,40 @@
 release_path = "/home/asonix/Development/rust/releases/"
-license = "LICENSE"
-readme = "README.md"
-
-[config.Windows.amd64]
-libs = ["/usr/x86_64-w64-mingw32"]
-env = {}
-
-[config.Linux.aarch64]
-libs = ["/usr/aarch64-linux-gnu", "/home/asonix/Development/aarch64"]
-env = {}
-
+included_files = ["README.md", "LICENSE"]
 [config.Linux.armv7h]
 libs = ["/usr/arm-linux-gnueabihf", "/home/asonix/Development/armeabi"]
-env = {}
+
+[config.Linux.armv7h.env]
 
 [config.Linux.armv7hmusl]
 libs = ["/usr/arm-linux-gnueabihf"]
-env = {}
 
-[config.Linux.armh]
-libs = ["/usr/arm-linux-gnueabihf", "/home/asonix/Development/armeabi"]
-env = {}
-
-[config.Linux.armhmusl]
-libs = ["/usr/arm-linux-gnueabihf"]
-env = {}
-
-[config.Linux.amd64]
-libs = []
-env = {}
+[config.Linux.armv7hmusl.env]
 
 [config.Linux.amd64musl]
 libs = []
-env = {}
+
+[config.Linux.amd64musl.env]
+
+[config.Linux.armh]
+libs = ["/usr/arm-linux-gnueabihf", "/home/asonix/Development/armeabi"]
+
+[config.Linux.armh.env]
+
+[config.Linux.aarch64]
+libs = ["/usr/aarch64-linux-gnu", "/home/asonix/Development/aarch64"]
+
+[config.Linux.aarch64.env]
+
+[config.Linux.amd64]
+libs = []
+
+[config.Linux.amd64.env]
+
+[config.Linux.armhmusl]
+libs = ["/usr/arm-linux-gnueabihf"]
+
+[config.Linux.armhmusl.env]
+[config.Windows.amd64]
+libs = ["/usr/x86_64-w64-mingw32"]
+
+[config.Windows.amd64.env]
