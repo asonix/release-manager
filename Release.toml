@@ -1,5 +1,6 @@
 release_path = "/home/asonix/Development/rust/releases/"
-included_files = ["README.md", "LICENSE"]
+included_files = ["README.md", "LICENSE", "ACKNOWLEDGEMENTS"]
+
 [config.Linux.armv7h]
 libs = ["/usr/arm-linux-gnueabihf", "/home/asonix/Development/armeabi"]
 
