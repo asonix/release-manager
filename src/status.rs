@@ -24,7 +24,7 @@ use super::Error;
 use toml;
 
 type Version = String;
-type Architecture = String;
+type BuildName = String;
 
 pub type Status = HashMap<Version, VersionStatus>;
 
@@ -62,11 +62,11 @@ impl<'a> StatusWrapper<'a> {
         );
     }
 
-    pub fn clear_missing_targets(&mut self, version: &str, target_strings: &[&str]) {
+    pub fn clear_missing_targets(&mut self, version: &str, target_strings: &[String]) {
         let mut version_info = self.status.get_mut(version);
         if let Some(ref mut version_info) = version_info {
-            version_info.arches.retain(|k, _| {
-                let contains = target_strings.contains(&k.as_ref());
+            version_info.build_names.retain(|k, _| {
+                let contains = target_strings.contains(&k);
                 if !contains {
                     debug!(
                         "{} not in supplied release config, removing from status file",
@@ -78,15 +78,15 @@ impl<'a> StatusWrapper<'a> {
         }
     }
 
-    pub fn needs_compile(&self, arch: &str, version: &str) -> bool {
-        let arches = self.status.get(version);
-        let vs = if let Some(vs) = arches {
+    pub fn needs_compile(&self, build_name: &str, version: &str) -> bool {
+        let build_names = self.status.get(version);
+        let vs = if let Some(vs) = build_names {
             vs
         } else {
             return true;
         };
 
-        let build_status = vs.arches.get(arch);
+        let build_status = vs.build_names.get(build_name);
         let build_status = if let Some(build_status) = build_status {
             build_status
         } else {
@@ -99,30 +99,40 @@ impl<'a> StatusWrapper<'a> {
         }
     }
 
-    fn set_status(&mut self, arch: &str, version: &str, status: BuildStatus) {
+    fn set_status(&mut self, build_name: &str, version: &str, status: BuildStatus) {
         let version_status = self.status.entry(version.into()).or_insert(
             VersionStatus::default(),
         );
-        version_status.arches.insert(arch.into(), status);
+        version_status.build_names.insert(build_name.into(), status);
     }
 
-    pub fn start(&mut self, arch: &str, version: &str) {
-        self.set_status(arch, version, BuildStatus::Started);
+    pub fn start(&mut self, build_name: &str, version: &str) {
+        self.set_status(build_name, version, BuildStatus::Started);
     }
 
-    pub fn succeed(&mut self, arch: &str, version: &str) {
-        self.set_status(arch, version, BuildStatus::Success);
+    pub fn succeed(&mut self, build_name: &str, version: &str) {
+        self.set_status(build_name, version, BuildStatus::Success);
     }
 
-    pub fn fail(&mut self, arch: &str, version: &str) {
-        self.set_status(arch, version, BuildStatus::Failed);
+    pub fn fail(&mut self, build_name: &str, version: &str) {
+        self.set_status(build_name, version, BuildStatus::Failed);
+    }
+
+    pub fn reset_all(&mut self, version: &str) {
+        let version_status = self.status.entry(version.into()).or_insert(
+            VersionStatus::default(),
+        );
+
+        for value in version_status.build_names.values_mut() {
+            *value = BuildStatus::Waiting;
+        }
     }
 
     pub fn all_clear(&self, version: &str) -> bool {
         let version_status = self.status.get(version);
 
         if let Some(ref version_status) = version_status {
-            for build_status in version_status.arches.values() {
+            for build_status in version_status.build_names.values() {
                 if build_status != &BuildStatus::Success {
                     return false;
                 }
@@ -153,20 +163,21 @@ impl<'a> StatusWrapper<'a> {
 #[derive(Serialize, Deserialize)]
 pub struct VersionStatus {
     published: bool,
-    arches: HashMap<Architecture, BuildStatus>,
+    build_names: HashMap<BuildName, BuildStatus>,
 }
 
 impl Default for VersionStatus {
     fn default() -> Self {
         VersionStatus {
             published: false,
-            arches: HashMap::new(),
+            build_names: HashMap::new(),
         }
     }
 }
 
 #[derive(Serialize, Deserialize, PartialEq)]
 pub enum BuildStatus {
+    Waiting,
     Started,
     Success,
     Failed,
