@@ -18,35 +18,34 @@ Release Manager currently handles the following targets:
 Once you have your cross compile targets set up, create a `Release.toml`. By default, release-manager expects the release toml to be in your crate's directory. If you wish to keep this file somewhere else, you can pass the `-r` option to release-manager with a path to the config.
 ```Toml
 release_path = "/home/asonix/Development/rust/releases"
-license = "LICENSE"
-readme = "README.md"
+included_files = ["LICENSE", "README.md", "ACKNOWLEDGEMENTS"]
 
-[config.Linux.aarch64]
+[[config.Linux.aarch64]]
 libs = ["/usr/aarch64-linux-gnu/lib", "/home/asonix/Development/aarch64/lib"]
 
 [config.Linux.aarch64.env]
 OPENSSL_DIR = "/home/asonix/Development/aarch64"
 PKG_CONFIG_ALLOW_CROSS = "1"
 
-[config.Linux.armv7h]
+[[config.Linux.armv7h]]
 libs = ["/usr/arm-linux-gnueabihf/lib", "/home/asonix/Development/armeabi/lib"]
 
 [config.Linux.armv7h.env]
 OPENSSL_DIR = "/home/asonix/Development/armeabi"
 PKG_CONFIG_ALLOW_CROSS = "1"
 
-[config.Linux.armh]
+[[config.Linux.armh]]
 libs = ["/usr/arm-linux-gnueabihf/lib", "/home/asonix/Development/armeabi/lib"]
 
 [config.Linux.armh.env]
 OPENSSL_DIR = "/home/asonix/Development/armeabi"
 PKG_CONFIG_ALLOW_CROSS = "1"
 
-[config.Linux.amd64]
+[[config.Linux.amd64]]
 libs = []
 env = {}
 
-[config.Linux.amd64musl]
+[[config.Linux.amd64musl]]
 libs = ["/usr/lib/musl/lib", "/home/asonix/Development/amd64-musl/lib"]
 
 [config.Linux.amd64musl.env]
@@ -54,7 +53,7 @@ OPENSSL_DIR = "/home/asonix/Development/amd64-musl"
 PKG_CONFIG_ALLOW_CROSS = "1"
 LIBZ_SYS_STATIC = "1"
 
-[config.Linux.armv7hmusl]
+[[config.Linux.armv7hmusl]]
 libs = ["/usr/lib/arm-linux-gnueabihf/lib", "/home/asonix/Development/armh-musl/lib"]
 
 [config.Linux.armv7hmusl.env]
@@ -62,7 +61,7 @@ OPENSSL_DIR = "/home/asonix/Development/armh-musl"
 PKG_CONFIG_ALLOW_CROSS = "1"
 LIBZ_SYS_STATIC = "1"
 
-[config.Linux.armhmusl]
+[[config.Linux.armhmusl]]
 libs = ["/usr/lib/arm-linux-gnueabihf/lib", "/home/asonix/Development/armh-musl/lib"]
 
 [config.Linux.armhmusl.env]
@@ -70,7 +69,7 @@ OPENSSL_DIR = "/home/asonix/Development/armh-musl"
 PKG_CONFIG_ALLOW_CROSS = "1"
 LIBZ_SYS_STATIC = "1"
 
-[config.Windows.amd64]
+[[config.Windows.amd64]]
 libs = ["/usr/x86_64-w64-mingw32/lib"]
 env = { PKG_CONFIG_ALLOW_CROSS = "1" }
 ```
@@ -78,19 +77,20 @@ env = { PKG_CONFIG_ALLOW_CROSS = "1" }
 The help menu
 ```
 $ release-manager
-release-manager 0.1.0
-Riley Trautman <asonix@tamu.edu>
+release-manager 0.1.4
+Riley Trautman <riley.trautman@gmail.com>
 A utility for creating release binaries for multiple platforms
 
 USAGE:
     release-manager [FLAGS] [OPTIONS]
 
 FLAGS:
-    -f, --force      Force recompiling of succeeded builds
-    -h, --help       Prints help information
-    -p, --publish    Publish to crates.io on succesfull build
-    -V, --version    Prints version information
-        --verbose    Print debug info
+    -f, --force                Force recompiling of succeeded builds
+    -h, --help                 Prints help information
+    -p, --publish              Publish to crates.io on succesfull build
+        --skip-dependencies    Don't compile dependencies unless needed
+    -V, --version              Prints version information
+        --verbose              Print debug info
 
 OPTIONS:
     -r, --release-config <release_config>    Provide an alternative path for the release config
