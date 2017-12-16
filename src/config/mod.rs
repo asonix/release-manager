@@ -27,8 +27,9 @@ use super::parse_toml;
 
 mod v0;
 mod v1;
+mod v2;
 
-pub use self::v1::Config;
+pub use self::v2::Config;
 
 #[derive(Debug, PartialEq)]
 pub enum ConfigState {
@@ -88,7 +89,7 @@ pub struct TargetConfig {
 }
 
 fn add_target(targets: &mut Vec<Target>, os: OS, arch: Arch, tc: &TargetConfig) {
-    if let Ok(mut target) = Target::new(os.clone(), arch) {
+    if let Ok(mut target) = Target::new(os.clone(), arch, None) {
         target.add_libs(&tc.libs);
         target.add_env(&tc.env);
         targets.push(target);

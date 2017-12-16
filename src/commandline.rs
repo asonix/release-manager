@@ -19,6 +19,8 @@
 pub struct Opt {
     #[structopt(short = "f", long = "force", help = "Force recompiling of succeeded builds")]
     force_compile: bool,
+    #[structopt(long = "skip-dependencies", help = "Don't compile dependencies unless needed")]
+    skip_dependencies: bool,
     #[structopt(short = "p", long = "publish", help = "Publish to crates.io on succesfull build")]
     publish: bool,
     #[structopt(long = "verbose", help = "Print debug info")]
@@ -42,6 +44,10 @@ impl Opt {
 
     pub fn verbose(&self) -> bool {
         self.verbose
+    }
+
+    pub fn skip_dependencies(&self) -> bool {
+        self.skip_dependencies
     }
 
     pub fn release_config(&self) -> Option<&str> {

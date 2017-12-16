@@ -59,12 +59,13 @@ pub enum OS {
 pub struct Target {
     os: OS,
     arch: Arch,
+    build_name: Option<String>,
     native_dirs: Vec<String>,
     environment: HashMap<String, String>,
 }
 
 impl Target {
-    pub fn new(os: OS, arch: Arch) -> Result<Self, Error> {
+    pub fn new(os: OS, arch: Arch, build_name: Option<String>) -> Result<Self, Error> {
         match (&os, &arch) {
             (&OS::Linux, &Arch::Aarch64) |
             (&OS::Linux, &Arch::Armv7h) |
@@ -79,6 +80,7 @@ impl Target {
                 Ok(Target {
                     os: os,
                     arch: arch,
+                    build_name: build_name,
                     native_dirs: Vec::new(),
                     environment: HashMap::new(),
                 })
@@ -106,6 +108,13 @@ impl Target {
         }
     }
 
+    pub fn output_str(&self) -> String {
+        match self.build_name {
+            Some(ref name) => format!("{}-{}", self.target_str(), name),
+            None => self.target_str().into(),
+        }
+    }
+
     pub fn add_libs(&mut self, libs: &[String]) {
         self.native_dirs.extend_from_slice(libs);
     }
@@ -126,7 +135,7 @@ impl Target {
 
     // Make env a table so it has key-value pairs
     pub fn compile(&self, version: &str, status: &mut StatusWrapper) -> Result<ExitStatus, Error> {
-        debug!("Starting compile for {}", self.target_str());
+        debug!("Starting compile for {}", self.output_str());
 
         Command::new("cargo")
             .args(&["build", "--target", self.target_str(), "--release"])

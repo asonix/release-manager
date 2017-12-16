@@ -144,29 +144,34 @@ fn do_main() -> Result<(), Error> {
         version,
         targets
             .iter()
-            .map(|t| t.target_str())
+            .map(|t| t.output_str())
             .collect::<Vec<_>>()
             .as_ref(),
     );
     status.write()?;
 
+    if opt.force_compile() {
+        status.reset_all(version);
+    }
+
     for target in targets {
-        if !opt.force_compile() && !status.needs_compile(target.target_str(), version) {
-            info!("Skipping: {}, already compiled", target.target_str());
+        if !status.needs_compile(&target.output_str(), version) {
+            info!("Skipping: {}, already compiled", target.output_str());
             continue;
+        }
+
+        let build_dir = &format!("{}/target/{}", dir_str, target.target_str());
+
+        if !opt.skip_dependencies() && fs::metadata(build_dir).is_ok() {
+            fs::remove_dir_all(build_dir)?;
         }
 
         let proc_status = target.compile(version, &mut status)?;
 
         if proc_status.success() {
-            let build_path = format!(
-                "{}/target/{}/release/{}",
-                dir_str,
-                target.target_str(),
-                &name
-            );
+            let build_path = format!("{}/release/{}", build_dir, &name);
 
-            let dest_dir = format!("{}/{}", &full_release_path_string, target.target_str());
+            let dest_dir = format!("{}/{}", &full_release_path_string, target.output_str());
 
             fs::create_dir_all(&dest_dir)?;
 
@@ -197,7 +202,7 @@ fn do_main() -> Result<(), Error> {
             zip_directory(
                 &full_release_path_string,
                 &dest_dir,
-                &format!("{}.zip", target.target_str()),
+                &format!("{}.zip", target.output_str()),
             )?;
         }
     }
