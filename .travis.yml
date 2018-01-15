@@ -4,7 +4,7 @@ rust:
 after_success: |
   [ $TRAVIS_BRANCH = master ] &&
   [ $TRAVIS_PULL_REQUEST = false ] &&
-  cargo doc &&
+  cargo doc --no-deps &&
   echo "<meta http-equiv=refresh content=0;url=http_signatures/index.html>" > target/doc/index.html &&
   sudo pip install ghp-import &&
   ghp-import -n target/doc &&
